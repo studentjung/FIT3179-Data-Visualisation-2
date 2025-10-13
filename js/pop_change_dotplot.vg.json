@@ -1,0 +1,60 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+    "width": 700,
+    "height": 700,
+    "background": "#f8f8f8",
+    "data": {
+        "url": "data/pop_vic_2023-24.csv",
+        "format": {
+            "type": "csv"
+        }
+    },
+    "transform": [
+        {
+            "fold": ["2023", "2024"],
+            "as": ["year", "population"]
+        },
+        {
+            "filter": "datum.sa3_name == 'Wyndham' || datum.sa3_name == 'Melton - Bacchus Marsh'"
+        }
+    ],
+    "encoding": {
+        "x": {
+            "field": "population",
+            "type": "quantitative"
+        },
+        "y": {
+            "field": "suburb_name",
+            "type": "nominal"
+        }
+    },
+    "layer": [
+        {
+            "mark": "line",
+            "encoding": {
+                "strokeWidth": {"value": 2},
+                "x": {"aggregate": "min", "field": "population"},
+                "x2": {"aggregate": "max", "field": "population"},
+                "y": {"field": "suburb_name"}
+            }
+        },
+        {
+            "mark": {"type": "point", "filled": true, "size": 100},
+            "encoding": {
+                "x": {
+                    "field": "population"
+                },
+                "y": {"field": "suburb_name"},
+                "color": {
+                    "field": "year",
+                    "type": "nominal"
+                },
+                "tooltip": [
+                    {"field": "suburb_name", "type": "nominal", "title": "Suburb"},
+                    {"field": "year", "type": "nominal", "title": "Year"},
+                    {"field": "population", "type": "quantitative", "title": "Population", "format": ","}
+                ]
+            }
+        }
+    ]
+}

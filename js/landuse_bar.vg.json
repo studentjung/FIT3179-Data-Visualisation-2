@@ -1,0 +1,79 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "width": 700,
+  "height": 700,
+  "background": "#f8f8f8",
+  "data": {
+    "url": "data/suburb_landuse.topojson",
+    "format": {
+      "type": "topojson",
+      "feature": "sa2_landuse_summary"
+    }
+  },
+  "transform": [
+    {
+      "fold": [
+        "properties.transport",
+        "properties.credited_open_space",
+        "properties.uncredited_open_space",
+        "properties.developable_area_residential",
+        "properties.education_community_government",
+        "properties.developable_area_employment",
+        "properties.regional_open_space",
+        "properties.other_non_developable_land"
+      ],
+      "as": ["land_use_type", "area"]
+    },
+    {
+      "filter": "datum.area != null && datum.area > 0.05"
+    }
+  ],
+  "title": "Bar plot of absolute land use per suburb",
+  "layer": [
+    {
+      "mark": "bar",
+      "encoding": {
+        "y": {
+          "field": "properties.sa2_name21",
+          "type": "nominal",
+          "axis": {"title": "Suburb"},
+          "sort": {
+            "op": "sum",
+            "field": "area",
+            "order": "descending"
+          }
+        },
+        "x": { 
+          "aggregate": "sum", 
+          "field": "area",
+          "type": "quantitative",
+          "axis": {"title": "Selected Land Use (km²)"}
+
+        },
+        "color": {
+          "field": "land_use_type",
+          "type": "nominal",
+          "scale": {
+            "domain": [
+              "properties.developable_area_residential",
+              "properties.developable_area_employment",
+              "properties.uncredited_open_space",
+              "properties.transport",
+              "properties.credited_open_space",
+              "properties.education_community_government",
+              "properties.regional_open_space",
+              "properties.other_non_developable_land"
+            ]
+          }
+        },
+        
+        "tooltip": [
+          {"field": "properties.sa2_name21", "type": "nominal", "title": "Suburb"},
+          {"field": "properties.areasqkm21", "type": "quantitative", "title": "Suburb Total Area (km²)", "format": ".2f"},
+          {"field": "land_use_type", "type": "nominal", "title": "Land Use Type"},
+          {"field": "area", "type": "quantitative", "title": "Land Use Area (km²)", "format": ".2f"}
+        ]
+      }
+    }
+  ]
+}
