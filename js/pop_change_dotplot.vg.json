@@ -1,8 +1,7 @@
 {
     "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-    "width": 700,
-    "height": 700,
     "background": "#f8f8f8",
+    "title": "Population change in selected suburbs (2023 vs 2024)",
     "data": {
         "url": "data/pop_vic_2023-24.csv",
         "format": {
@@ -15,24 +14,30 @@
             "as": ["year", "population"]
         },
         {
-            "filter": "datum.sa3_name == 'Wyndham' || datum.sa3_name == 'Melton - Bacchus Marsh'"
+            "filter": "datum['2023-24'] > 500 && (datum.sa3_name == 'Wyndham' || datum.sa3_name == 'Melton - Bacchus Marsh' || datum.sa4_name == 'Melbourne - North East' || datum.sa4_name == 'Melbourne - North West')"
         }
     ],
     "encoding": {
         "x": {
             "field": "population",
-            "type": "quantitative"
+            "type": "quantitative",
+            "title": "Population (2023 vs 2024)"
         },
         "y": {
             "field": "suburb_name",
-            "type": "nominal"
+            "type": "nominal",
+            "title": "Suburb",
+            "sort": {
+                "op": "average",
+                "field": "2023-24",
+                "order": "descending"
+            }
         }
     },
     "layer": [
         {
-            "mark": "line",
+            "mark": {"type": "rule", "strokeWidth": 2},
             "encoding": {
-                "strokeWidth": {"value": 2},
                 "x": {"aggregate": "min", "field": "population"},
                 "x2": {"aggregate": "max", "field": "population"},
                 "y": {"field": "suburb_name"}
@@ -47,7 +52,8 @@
                 "y": {"field": "suburb_name"},
                 "color": {
                     "field": "year",
-                    "type": "nominal"
+                    "type": "nominal",
+                    "title": "Year"
                 },
                 "tooltip": [
                     {"field": "suburb_name", "type": "nominal", "title": "Suburb"},

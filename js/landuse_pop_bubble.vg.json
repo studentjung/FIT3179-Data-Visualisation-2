@@ -1,8 +1,5 @@
 {
     "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-    "width": 700,
-    "height": 700,
-    "background": "#f8f8f8",
     "data": {
         "url": "data/suburb_landuse.topojson",
         "format": {
@@ -29,60 +26,77 @@
             "from": {
                 "data": {"url": "data/pop_vic_2023-24.csv"},
                 "key": "suburb_name",
-                "fields": ["2023", "2024", "2023-24%", "natural_increase", "net_internal_migration", "net_overseas_migration", "pop_dense_2024"]
+                "fields": ["2023", "2024", "2023-24", "natural_increase", "net_internal_migration", "net_overseas_migration", "pop_dense_2024"]
             }
         },
         {
-            "filter": "datum.area != null && datum['2023-24%'] != null && datum.area > 0.001 && datum['2024'] > 0"
+            "filter": "datum.area != null && datum.area > 0"
+        },
+        {
+            "filter": "datum['2023-24'] != null && datum['2024'] > 0 && datum['2023-24'] > 0"
+        },
+        {
+            "filter": "datum['natural_increase'] != null && datum['natural_increase'] > 0"
+        },
+        {
+            "filter": "datum['net_internal_migration'] != null && datum['net_internal_migration'] > 0"
+        },
+        {
+            "filter": "datum['net_overseas_migration'] != null && datum['net_overseas_migration'] > 0"
+        },
+        {
+            "filter": "datum['pop_dense_2024'] != null && datum['pop_dense_2024'] > 0"
         }
     ],
-    "mark": {"type": "circle", "opacity": 0.7, "stroke": "black"},
-    "encoding": {
-        "facet": {
-            "field": "land_use_type",
-            "columns": 2,
-            "header": { "title": null, "titleFontSize": 20, "labelFontSize": 15, "labelAngle": 0 }
+    "repeat": ["2023-24", "natural_increase", "net_internal_migration", "net_overseas_migration"],
+    "columns": 2,
+    "spec": {
+        "mark": {"type": "circle", "opacity": 0.7, "stroke": "black"},
+        "encoding": {
+            "y": {
+                "aggregate": "sum",
+                "field": "area",
+                "type": "quantitative",
+                "title": "Total Land Use (km²)"
+            },
+            "x": {
+                "field": {"repeat": "repeat"},
+                "type": "quantitative"
+            },
+            "size": {
+                "field": "2024",
+                "type": "quantitative",
+                "title": "Population",
+                "scale": {
+                    "type": "log",
+                    "range": [1, 1500]
+                }
+            },
+            "color": {
+                "field": "pop_dense_2024",
+                "type": "quantitative",
+                "title": "Population Density (people/km²)",
+                "scale": {
+                    "type": "log"
+                }
+            },
+            "tooltip": [
+                {"field": "properties.sa2_name21", "type": "nominal", "title": "Suburb"},
+                {"aggregate": "sum", "field": "area", "type": "quantitative", "title": "Total Land Use (km²)"},
+                {"field": "2023", "type": "quantitative", "title": "Population 2023"},
+                {"field": "2024", "type": "quantitative", "title": "Population 2024"},
+                {"field": "2023-24", "type": "quantitative", "title": "Population Growth (%)"},
+                {"field": "natural_increase", "type": "quantitative", "title": "Natural Increase"},
+                {"field": "net_internal_migration", "type": "quantitative", "title": "Net Internal Migration"},
+                {"field": "net_overseas_migration", "type": "quantitative", "title": "Net Overseas Migration"},
+                {"field": "pop_dense_2024", "type": "quantitative", "title": "Population Density (people/km²)"}
+            ]
         },
-        "y": {
-            "field": "area",
-            "type": "quantitative",
-            "title": "Land Use (km²)"
-        },
-        "x": {
-            "field": "2023-24%",
-            "type": "quantitative",
-            "title": "Population Growth (%)"
-        },
-        "size": {
-            "field": "2024",
-            "type": "quantitative",
-            "title": "Population",
+        "resolve": {
             "scale": {
-                "type": "log",
-                "range": [1, 2000]
+                "x": "independent",
+                "y": "independent"
             }
-        },
-        "color": {
-            "field": "pop_dense_2024",
-            "type": "quantitative",
-            "title": "Population Density (people/km²)"
-        },
-        "tooltip": [
-            {"field": "properties.sa2_name21", "type": "nominal", "title": "Suburb"},
-            {"field": "properties.developable_area_residential", "type": "quantitative", "title": "Residential Land Use (km²)"},
-            {"field": "2023", "type": "quantitative", "title": "Population 2023"},
-            {"field": "2024", "type": "quantitative", "title": "Population 2024"},
-            {"field": "2023-24%", "type": "quantitative", "title": "Population Growth (%)"},
-            {"field": "natural_increase", "type": "quantitative", "title": "Natural Increase"},
-            {"field": "net_internal_migration", "type": "quantitative", "title": "Net Internal Migration"},
-            {"field": "net_overseas_migration", "type": "quantitative", "title": "Net Overseas Migration"},
-            {"field": "pop_dense_2024", "type": "quantitative", "title": "Population Density (people/km²)"}
-        ]
-    },
-    "resolve": {
-        "scale": {
-            "x": "independent",
-            "y": "independent"
         }
     }
 }

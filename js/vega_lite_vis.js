@@ -17,3 +17,8 @@ var dot_plot = "js/pop_change_dotplot.vg.json";
 vegaEmbed("#dot", dot_plot).then(function(result) {
     // Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
 }).catch(console.error);
+
+var tree_map = "js/pop_treemap.vg.json";
+vegaEmbed("#tree", tree_map).then(function(result) {
+    // Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
+}).catch(console.error);

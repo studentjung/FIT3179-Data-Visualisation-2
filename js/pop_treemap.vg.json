@@ -1,0 +1,82 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v6.json",
+  "width": 800,
+  "height": 500,
+  "padding": 5,
+  "title": "Population in Melbourne Suburbs (2024)",
+  "data": [
+    {
+      "name": "population",
+      "url": "data/pop_vic_2023-24.csv",
+      "format": {"type": "csv"},
+      "transform": [
+        {
+          "type": "filter",
+          "expr": "datum['2024'] > 500 && (datum.sa3_name == 'Wyndham' || datum.sa3_name == 'Melton - Bacchus Marsh' || datum.sa4_name == 'Melbourne - North East' || datum.sa4_name == 'Melbourne - North West')"
+        }
+      ]
+    },
+    {
+      "name": "hierarchy",
+      "source": "population",
+      "transform": [
+        {
+          "type": "nest",
+          "keys": ["sa4_name", "sa3_name", "suburb_name"]
+        },
+        {
+          "type": "treemap",
+          "field": "2024",
+          "sort": {"field": "value", "order": "descending"},
+          "round": true,
+          "method": "squarify",
+          "padding": 2,
+          "size": [{"signal": "width"}, {"signal": "height"}]
+        }
+      ]
+    }
+  ],
+  "scales": [
+    {
+      "name": "color",
+      "type": "ordinal",
+      "domain": {"data": "population", "field": "sa3_name"},
+      "range": {"scheme": "category20"}
+    }
+  ],
+  "marks": [
+    {
+      "type": "rect",
+      "from": {"data": "hierarchy"},
+      "encode": {
+        "enter": {
+          "x": {"field": "x0"},
+          "y": {"field": "y0"},
+          "x2": {"field": "x1"},
+          "y2": {"field": "y1"},
+          "fill": {"scale": "color", "field": "sa3_name"},
+          "stroke": {"value": "white"},
+          "tooltip": {
+            "signal": "{'Area': datum.suburb_name || datum.sa3_name || datum.sa4_name, 'Population': format(datum['2024'], ','), 'Region': datum.sa3_name, 'Division': datum.sa4_name}"
+          }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "hierarchy"},
+      "encode": {
+        "enter": {
+          "x": {"signal": "(datum.x0 + datum.x1) / 2"},
+          "y": {"signal": "(datum.y0 + datum.y1) / 2"},
+          "align": {"value": "center"},
+          "baseline": {"value": "middle"},
+          "text": {"field": "suburb_name"},
+          "fontSize": {"signal": "min(20, (datum.x1 - datum.x0) / 5)"},
+          "limit": {"signal": "datum.x1 - datum.x0 - 4"},
+          "fill": {"value": "white"}
+        }
+      }
+    }
+  ]
+}
