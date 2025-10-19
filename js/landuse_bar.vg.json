@@ -127,7 +127,7 @@
           "field": "properties.sa2_name21",
           "type": "nominal",
           "title": "Suburb",
-          "axis": {"labelAngle": -45},
+          "axis": { "labelAngle": -45 },
           "sort": {
             "op": "sum",
             "field": "sort_key",
@@ -151,13 +151,7 @@
               "Open Space",
               "Residential"
             ],
-            "range": [
-              "#E67F30",
-              "#E65D5D",
-              "#B45BD9",
-              "#45B671",
-              "#4B92DB"
-            ]
+            "range": ["#E67F30", "#E65D5D", "#B45BD9", "#45B671", "#4B92DB"]
           },
           "legend": {
             "title": "Land Use Type",
@@ -206,10 +200,10 @@
         "font": "Open Sans"
       },
       "encoding": {
-        "text": {"value": "Rockbank - Mount Cottrell has 40.56 km² of"},
-        "x": {"value": 440},
-        "y": {"value": 90}
-      } 
+        "text": { "value": "Rockbank - Mount Cottrell has 40.56 km² of" },
+        "x": { "value": 440 },
+        "y": { "value": 90 }
+      }
     },
     {
       "mark": {
@@ -221,10 +215,10 @@
         "font": "Open Sans"
       },
       "encoding": {
-        "text": {"value": "planned out space making it the largest."},
-        "x": {"value": 445},
-        "y": {"value": 105}
-      } 
+        "text": { "value": "planned out space making it the largest." },
+        "x": { "value": 445 },
+        "y": { "value": 105 }
+      }
     }
   ]
 }
