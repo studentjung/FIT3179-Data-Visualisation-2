@@ -1,18 +1,40 @@
 {
   "$schema": "https://vega.github.io/schema/vega/v6.json",
-  "width": 800,
+  "autosize": {
+    "type": "fit"
+  },
+  "width": 0,
   "height": 500,
   "padding": 5,
   "title": "Population in Melbourne Suburbs (2024)",
+  "background": "#303030",
+  "config": {
+    "axis": {
+      "labelColor": "white",
+      "titleColor": "white",
+      "labelFont": "Open Sans",
+      "titleFont": "Open Sans"
+    },
+    "legend": {
+      "labelColor": "white",
+      "titleColor": "white",
+      "labelFont": "Open Sans",
+      "titleFont": "Open Sans"
+    },
+    "title": {
+      "color": "white",
+      "font": "Open Sans"
+    }
+  },
   "data": [
     {
       "name": "population",
       "url": "data/pop_vic_2023-24.csv",
-      "format": {"type": "csv"},
+      "format": { "type": "csv" },
       "transform": [
         {
           "type": "filter",
-          "expr": "datum['2024'] > 500 && (datum.sa3_name == 'Wyndham' || datum.sa3_name == 'Melton - Bacchus Marsh' || datum.sa4_name == 'Melbourne - North East' || datum.sa4_name == 'Melbourne - North West')"
+          "expr": "datum.sa3_name == 'Hobsons Bay' || datum.sa3_name == 'Melbourne City' || datum.sa3_name == 'Melton - Bacchus Marsh' || datum.sa3_name == 'Monash' || datum.sa3_name == 'Sunbury' || datum.sa3_name == 'Tullamarine - Broadmeadows'  || datum.sa3_name == 'Whittlesea - Wallan' || datum.sa3_name == 'Wyndham'"
         }
       ]
     },
@@ -22,16 +44,29 @@
       "transform": [
         {
           "type": "nest",
-          "keys": ["sa4_name", "sa3_name", "suburb_name"]
+          "keys": ["sa3_name", "suburb_name"]
         },
         {
           "type": "treemap",
           "field": "2024",
-          "sort": {"field": "value", "order": "descending"},
+          "sort": { "field": "value", "order": "descending" },
           "round": true,
           "method": "squarify",
           "padding": 2,
-          "size": [{"signal": "width"}, {"signal": "height"}]
+          "size": [{ "signal": "width" }, { "signal": "height" }]
+        }
+      ]
+    },
+    {
+      "name": "sa3_labels",
+      "source": "hierarchy",
+      "transform": [
+        {
+          "type": "aggregate",
+          "groupby": ["sa3_name"],
+          "fields": ["x0","x1","y0","y1"],
+          "ops": ["min","max","min","max"],
+          "as": ["x0_min","x1_max","y0_min","y1_max"]
         }
       ]
     }
@@ -40,41 +75,43 @@
     {
       "name": "color",
       "type": "ordinal",
-      "domain": {"data": "population", "field": "sa3_name"},
-      "range": {"scheme": "category20"}
+      "domain": { "data": "hierarchy", "field": "sa3_name" },
+      "range": { "scheme": "tableau10" }
     }
   ],
   "marks": [
     {
       "type": "rect",
-      "from": {"data": "hierarchy"},
+      "from": { "data": "hierarchy" },
       "encode": {
         "enter": {
-          "x": {"field": "x0"},
-          "y": {"field": "y0"},
-          "x2": {"field": "x1"},
-          "y2": {"field": "y1"},
-          "fill": {"scale": "color", "field": "sa3_name"},
-          "stroke": {"value": "white"},
+          "x": { "field": "x0" },
+          "y": { "field": "y0" },
+          "x2": { "field": "x1" },
+          "y2": { "field": "y1" },
+          "fill": { "scale": "color", "field": "sa3_name" },
+          "stroke": { "value": "white" },
           "tooltip": {
-            "signal": "{'Area': datum.suburb_name || datum.sa3_name || datum.sa4_name, 'Population': format(datum['2024'], ','), 'Region': datum.sa3_name, 'Division': datum.sa4_name}"
+            "signal": "{'Area': datum.suburb_name || datum.sa3_name || datum.sa4_name, 'Population': format(datum['2024'], ','), 'Region': datum.sa3_name}"
           }
         }
       }
     },
     {
+      "name": "labels",
       "type": "text",
-      "from": {"data": "hierarchy"},
+      "from": { "data": "sa3_labels" },
       "encode": {
         "enter": {
-          "x": {"signal": "(datum.x0 + datum.x1) / 2"},
-          "y": {"signal": "(datum.y0 + datum.y1) / 2"},
-          "align": {"value": "center"},
-          "baseline": {"value": "middle"},
-          "text": {"field": "suburb_name"},
-          "fontSize": {"signal": "min(20, (datum.x1 - datum.x0) / 5)"},
-          "limit": {"signal": "datum.x1 - datum.x0 - 4"},
-          "fill": {"value": "white"}
+          "x": { "signal": "(datum.x0_min + datum.x1_max)/2" },
+          "y": { "signal": "datum.sa3_name == 'Monash' ? (datum.y0_min + datum.y1_max)/2 - 30 : (datum.y0_min + datum.y1_max)/2" },
+          "text": { "field": "sa3_name" },
+          "align": { "value": "center" },
+          "baseline": { "value": "middle" },
+          "fill": { "value": "white" },
+          "fontSize": { "value": 18 },
+          "font": { "value": "Open Sans" },
+          "fontWeight": { "value": "bolder"}
         }
       }
     }

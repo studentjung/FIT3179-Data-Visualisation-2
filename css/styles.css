@@ -1,17 +1,157 @@
 .page {
-    width: 75%;
-    background-color: #fefefe;
+    width: 70%;
+    background-color: #242424;
+    color: white;
     margin: auto;
     padding-left: 50px;
     padding-right:50px;
     padding-top: 35px;
     padding-bottom: 35px;
+    border: 4px solid;     
+    border-image: linear-gradient("to right", #ffffff, transparent) 1;
+    border-radius: 10px;
+}
+
+#top-row {
+    margin-bottom: 3rem;
+}
+
+.row {
+    margin-bottom: 8rem;
+    width: 100%;
+}
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    background-image: url('../img/ground.png');
+    background-size: cover;
+    background-blend-mode: darken;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+h2 {
+    margin-top: 0;
+}
+
+h5 {
+    margin-top: 0;
+}
+
+.top-p {
+    margin-top: 0;
+}
+
+.final {
+    padding-top: 1rem;
+    background-color: #303030;
+}
+
+.meta-text {
+    margin: 0;
+}
+
+p {
+    font-size: 1rem;
+    max-width: 65ch;
+}
+
+a {
+    color: cyan;
+}
+
+.landuse-text {
+    color: #8E3D37;
+    font-weight: bold;
+}
+
+.resid-text {
+    color: #4B92DB;
+}
+
+.infra-text {
+    color: #D6476F;
+}
+
+.indus-text {
+    color: #B45BD9;
+}
+
+.open-text {
+    color: #45B671;
+}
+
+.commu-text {
+    color: #E67F30;
+}
+
+#wdynham-text {
+    color: #ECA2A7;
+    font-weight: bold;
+}
+
+.tull-text {
+    color: #87B5B2;
+    font-weight: bold;
+}
+
+.melb-text {
+    color: #5977A4;
+    font-weight: bold;
+}
+
+#author {
+    margin-top: 0;
+}
+
+#sunbury-text {
+    color: #CD605B;
+    font-weight: bold;
+}
+
+#bar {
+    margin-top: 2rem;
+}
+
+#bubble {
+    margin-bottom: 2rem;
 }
 
 #title{
 	text-align: center;
+    font-family: "Iceberg", sans-serif;
+    font-weight: 800;
+    font-size: 4rem;
+    margin: .5em 0 .2em 0;
 }
 
 #subtitle{
 	text-align: center;
+    font-size: medium;
+    margin-top: 0;
+}
+
+.vega-embed.has-actions {
+    padding: 0;
+}
+
+.vega-bindings {
+    display: flex;
+    flex-direction: row;
+}
+
+.vega-bind {
+    width: 100%;
+}
+
+.vega-bind-name {
+    font-weight: 600;
+}
+
+.vega-bind select {
+    background-color: #333;
+    color: white;
+    border: 1px solid #555;
+    padding: 5px;
+    border-radius: 4px; 
+    margin-left: 1rem;
 }

@@ -1,11 +1,39 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-  "background": "#f8f8f8",
+  "background": "#303030",
   "data": {
     "url": "data/suburb_landuse.topojson",
     "format": {
       "type": "topojson",
       "feature": "sa2_landuse_summary"
+    }
+  },
+  "autosize": {
+    "type": "fit"
+  },
+  "width": "container",
+  "height": 500,
+  "config": {
+    "axis": {
+      "labelColor": "white",
+      "titleColor": "white",
+      "labelFont": "Open Sans",
+      "titleFont": "Open Sans",
+      "titleFontSize": 14,
+      "labelFontSize": 13
+    },
+    "legend": {
+      "labelColor": "white",
+      "titleColor": "white",
+      "labelFont": "Open Sans",
+      "titleFont": "Open Sans",
+      "titleFontSize": 14,
+      "labelFontSize": 13
+    },
+    "title": {
+      "color": "white",
+      "font": "Open Sans",
+      "fontSize": 15
     }
   },
   "params": [
@@ -15,25 +43,19 @@
         "input": "select",
         "options": [
           null,
-          "transport",
-          "credited_open_space",
-          "uncredited_open_space",
-          "developable_area_residential",
-          "education_community_government",
-          "developable_area_employment",
-          "regional_open_space",
-          "other_non_developable_land"
+          "open_space",
+          "community",
+          "infrastructure",
+          "industrial",
+          "residential"
         ],
         "labels": [
           "All",
-          "Transport",
-          "Credited Open Space",
-          "Uncredited Open Space",
-          "Residential",
-          "Education/Community/Government",
-          "Industrial/Commercial",
-          "Regional Open Space",
-          "Non-Developable"
+          "Open Space",
+          "Community",
+          "Infrastructure",
+          "Industrial",
+          "Residential"
         ],
         "name": "Order By: "
       }
@@ -47,34 +69,50 @@
         "labels": ["Ascending", "Descending"],
         "name": "Ascending/Descending: "
       }
-    }  
+    }
   ],
   "transform": [
     {
+      "calculate": "(datum.properties.other_non_developable_land + datum.properties.regional_open_space + datum.properties.credited_open_space + datum.properties.uncredited_open_space)",
+      "as": "open_space_area"
+    },
+    {
+      "calculate": "datum.properties.education_community_government",
+      "as": "community_area"
+    },
+    {
+      "calculate": "datum.properties.transport",
+      "as": "infrastructure_area"
+    },
+    {
+      "calculate": "datum.properties.developable_area_employment",
+      "as": "industrial_area"
+    },
+    {
+      "calculate": "datum.properties.developable_area_residential",
+      "as": "residential_area"
+    },
+    {
       "fold": [
-        "properties.transport",
-        "properties.credited_open_space",
-        "properties.uncredited_open_space",
-        "properties.developable_area_residential",
-        "properties.education_community_government",
-        "properties.developable_area_employment",
-        "properties.regional_open_space",
-        "properties.other_non_developable_land"
+        "open_space_area",
+        "community_area",
+        "infrastructure_area",
+        "industrial_area",
+        "residential_area"
       ],
       "as": ["land_use_type", "area"]
     },
     {
-      "calculate": "order_by == null ? datum.area : (datum.land_use_type == ('properties.' + order_by) ? datum.area : 0)",
+      "calculate": "order_by == null ? datum.area : (datum.land_use_type === (order_by + '_area') ? datum.area : 0)",
       "as": "sort_value"
     },
     {
       "filter": "datum.area != null && datum.area > 0.05"
     },
     {
-      "calculate": "datum.land_use_type === 'properties.developable_area_residential' ? 'Residential' : datum.land_use_type === 'properties.developable_area_employment' ? 'Employment' : datum.land_use_type === 'properties.uncredited_open_space' ? 'Uncredited Open Space' : datum.land_use_type === 'properties.transport' ? 'Transport' : datum.land_use_type === 'properties.credited_open_space' ? 'Credited Open Space' : datum.land_use_type === 'properties.education_community_government' ? 'Education / Community / Gov' : datum.land_use_type === 'properties.regional_open_space' ? 'Regional Open Space' : datum.land_use_type === 'properties.other_non_developable_land' ? 'Other Non-Developable' : datum.land_use_type",
+      "calculate": "datum.land_use_type === 'open_space_area' ? 'Open Space' : datum.land_use_type === 'community_area' ? 'Community' : datum.land_use_type === 'infrastructure_area' ? 'Infrastructure' : datum.land_use_type === 'industrial_area' ? 'Industrial' : 'Residential'",
       "as": "land_use_friendly"
-    }
-    ,
+    },
     {
       "calculate": "order_asc_desc === 'ascending' ? datum.sort_value : -datum.sort_value",
       "as": "sort_key"
@@ -85,18 +123,19 @@
     {
       "mark": "bar",
       "encoding": {
-        "y": {
+        "x": {
           "field": "properties.sa2_name21",
           "type": "nominal",
           "title": "Suburb",
+          "axis": {"labelAngle": -45},
           "sort": {
             "op": "sum",
             "field": "sort_key",
             "order": "ascending"
           }
         },
-        "x": { 
-          "aggregate": "sum", 
+        "y": {
+          "aggregate": "sum",
           "field": "area",
           "type": "quantitative",
           "title": "Selected Land Use (km²)"
@@ -104,27 +143,88 @@
         "color": {
           "field": "land_use_friendly",
           "type": "nominal",
-          "title": "Land Use Type",
           "scale": {
             "domain": [
-              "Residential",
-              "Employment",
-              "Uncredited Open Space",
-              "Transport",
-              "Credited Open Space",
-              "Education / Community / Gov",
-              "Regional Open Space",
-              "Other Non-Developable"
+              "Community",
+              "Infrastructure",
+              "Industrial",
+              "Open Space",
+              "Residential"
+            ],
+            "range": [
+              "#E67F30",
+              "#E65D5D",
+              "#B45BD9",
+              "#45B671",
+              "#4B92DB"
             ]
+          },
+          "legend": {
+            "title": "Land Use Type",
+            "orient": "right"
           }
         },
         "tooltip": [
-          {"field": "properties.sa2_name21", "type": "nominal", "title": "Suburb"},
-          {"field": "properties.areasqkm21", "type": "quantitative", "title": "Suburb Total Area (km²)", "format": ".2f"},
-          {"field": "land_use_friendly", "type": "nominal", "title": "Land Use Type"},
-          {"field": "area", "type": "quantitative", "title": "Land Use Area (km²)", "format": ".2f"}
+          {
+            "field": "properties.sa2_name21",
+            "type": "nominal",
+            "title": "Suburb"
+          },
+          {
+            "field": "properties.areasqkm21",
+            "type": "quantitative",
+            "title": "Suburb Total Area (km²)",
+            "format": ".2f"
+          },
+          {
+            "field": "land_use_friendly",
+            "type": "nominal",
+            "title": "Land Use Type"
+          },
+          {
+            "field": "area",
+            "type": "quantitative",
+            "title": "Land Use Area (km²)",
+            "format": ".2f"
+          },
+          {
+            "field": "all_total",
+            "type": "quantitative",
+            "title": "Total Land Use Area (km²)",
+            "format": ".2f"
+          }
         ]
       }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "align": "center",
+        "baseline": "bottom",
+        "color": "white",
+        "fontSize": 16,
+        "font": "Open Sans"
+      },
+      "encoding": {
+        "text": {"value": "Rockbank - Mount Cottrell has 40.56 km² of"},
+        "x": {"value": 440},
+        "y": {"value": 90}
+      } 
+    },
+    {
+      "mark": {
+        "type": "text",
+        "align": "center",
+        "baseline": "bottom",
+        "color": "white",
+        "fontSize": 16,
+        "font": "Open Sans"
+      },
+      "encoding": {
+        "text": {"value": "planned out space making it the largest."},
+        "x": {"value": 445},
+        "y": {"value": 105}
+      } 
     }
   ]
 }

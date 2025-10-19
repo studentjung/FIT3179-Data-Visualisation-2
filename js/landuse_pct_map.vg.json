@@ -1,12 +1,39 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-  "background": "#f8f8f8",
+  "background": "#303030",
   "projection": {
     "type": "azimuthalEqualArea",
     "rotate": [215, 0, 0]
   },
-  "width": 700,
-  "height": 700,
+  "title": "Percentage of future land area per suburb",
+  "config": {
+    "axis": {
+      "labelColor": "white",
+      "titleColor": "white",
+      "labelFont": "Open Sans",
+      "titleFont": "Open Sans",
+      "titleFontSize": 14,
+      "labelFontSize": 13
+    },
+    "legend": {
+      "labelColor": "white",
+      "titleColor": "white",
+      "labelFont": "Open Sans",
+      "titleFont": "Open Sans",
+      "titleFontSize": 14,
+      "labelFontSize": 13
+    },
+    "title": {
+      "color": "white",
+      "font": "Open Sans",
+      "fontSize": 15
+    }
+  },
+  "autosize": {
+    "type": "fit"
+  },
+  "width": "container",
+  "height": 500,
   "data": {
     "url": "data/suburb_landuse.topojson",
     "format": {
@@ -16,83 +43,121 @@
   },
   "transform": [
     {
-      "calculate": "datum.properties[land_use_class] != null ? datum.properties[land_use_class] : 0",
-      "as": "selected_value"
+      "calculate": "(datum.properties.other_non_developable_land_pct + datum.properties.regional_open_space_pct + datum.properties.credited_open_space_pct + datum.properties.uncredited_open_space_pct)",
+      "as": "open_space_total_pct"
     },
     {
-      "calculate": "datum.selected_value / 100 * datum.properties.areasqkm21",
+      "calculate": "(datum.properties.other_non_developable_land + datum.properties.regional_open_space + datum.properties.credited_open_space + datum.properties.uncredited_open_space)",
+      "as": "open_space_total"
+    },
+    {
+      "calculate": "datum.open_space_total_pct + datum.properties.education_community_government_pct + datum.properties.transport_pct + datum.properties.developable_area_residential_pct + datum.properties.developable_area_employment_pct",
+      "as": "all_total_pct"
+    },
+    {
+      "calculate": "datum.open_space_total + datum.properties.education_community_government + datum.properties.transport + datum.properties.developable_area_residential + datum.properties.developable_area_employment",
+      "as": "all_total"
+    },
+    {
+      "calculate": "land_use_group === null ? datum.all_total_pct : land_use_group === 'Open Space' ? datum.open_space_total_pct : land_use_group === 'Community' ? datum.properties.education_community_government_pct : land_use_group === 'Infrastructure' ? datum.properties.transport_pct : land_use_group === 'Industrial' ? datum.properties.developable_area_employment_pct : land_use_group === 'Residential' ? datum.properties.developable_area_residential_pct : datum.all_total_pct",
+      "as": "selected_value_pct"
+    },
+    {
+      "calculate": "land_use_group === null ? datum.all_total : land_use_group === 'Open Space' ? datum.open_space_total : land_use_group === 'Community' ? datum.properties.education_community_government : land_use_group === 'Infrastructure' ? datum.properties.transport : land_use_group === 'Industrial' ? datum.properties.developable_area_employment : land_use_group === 'Residential' ? datum.properties.developable_area_residential : datum.all_total",
       "as": "selected_value_abs"
     }
   ],
-  "title": "Percentage of residential land area per suburb",
   "params": [
     {
-      "name": "land_use_class",
-      "value": "developable_area_residential_pct",
+      "name": "land_use_group",
       "bind": {
         "input": "select",
         "options": [
-          "transport_pct",
-          "credited_open_space_pct",
-          "uncredited_open_space_pct",
-          "developable_area_residential_pct",
-          "education_community_government_pct",
-          "developable_area_employment_pct",
-          "regional_open_space_pct",
-          "other_non_developable_land_pct"
+          null,
+          "Community",
+          "Infrastructure",
+          "Industrial",
+          "Open Space",
+          "Residential"
         ],
         "labels": [
-          "Transport",
-          "Credited Open Space",
-          "Uncredited Open Space",
-          "Residential",
-          "Education/Community/Government",
-          "Industrial/Commercial",
-          "Regional Open Space",
-          "Non-Developable"
+          "All",
+          "Community",
+          "Infrastructure",
+          "Industrial",
+          "Open Space",
+          "Residential"
         ],
-        "name": "Land Use Type: "
+        "name": "Land Use Group: "
       }
     }
   ],
   "layer": [
     {
-      "mark": {"type": "geoshape", "stroke": "gray", "fill": "#f8f8f8"}
+      "mark": { "type": "geoshape", "stroke": "gray", "fill": "#303030" }
     },
     {
       "transform": [
         {
-          "filter": "datum.selected_value > 0"
+          "filter": "datum.selected_value_abs > 0.05"
         }
       ],
-      "mark": {"type": "geoshape", "stroke": "black"},
+      "mark": { "type": "geoshape", "stroke": "black", "strokeWidth": 1.5 },
       "encoding": {
         "color": {
-          "field": "selected_value", 
-          "type": "quantitative", 
-          "title": "Selected Land Use (%)", 
+          "field": "selected_value_pct",
+          "type": "quantitative",
           "scale": {
-            "scheme": "blues"
+            "scheme": {
+              "expr": "land_use_group === null ? 'browns' : land_use_group === 'Open Space' ? 'greens' : land_use_group === 'Community' ? 'oranges' : land_use_group === 'Infrastructure' ? 'reds' : land_use_group === 'Industrial' ? 'purples' : land_use_group === 'Residential' ? 'blues' : 'browns'"
+            }
           },
           "legend": {
-            "title": "Selected Land Use %",
-            "format": ".0f",
-            "titleFontSize": 14,
-            "labelFontSize": 12
+            "title": "Land Use (%)",
+            "format": ".0f"
           }
         },
         "tooltip": [
-          {"field": "properties.sa2_name21", "type": "nominal", "title": "Suburb"},
-          {"field": "properties.areasqkm21", "type": "quantitative", "title": "Suburb Total Area (km²)", "format": ".2f"},
-          {"field": "selected_value_abs", "type": "quantitative", "title": "Selected Land Use (km²)", "format": ".2f"},
-          {"field": "selected_value", "type": "quantitative", "title": "Selected Land Use (%)", "format": ".0f"}
+          {
+            "field": "properties.sa2_name21",
+            "type": "nominal",
+            "title": "Suburb"
+          },
+          {
+            "field": "properties.areasqkm21",
+            "type": "quantitative",
+            "title": "Suburb Total Area (km²)",
+            "format": ".2f"
+          },
+          {
+            "field": "selected_value_abs",
+            "type": "quantitative",
+            "title": "Land Use Area (km²)",
+            "format": ".2f"
+          },
+          {
+            "field": "selected_value_pct",
+            "type": "quantitative",
+            "title": "Land Use (%)",
+            "format": ".2f"
+          }
         ]
       }
     },
     {
-      "mark": {"type": "text", "fontSize": 16, "fontWeight": "bold"},
+      "mark": {
+        "type": "text",
+        "fontSize": 16,
+        "fontWeight": "bold",
+        "font": "Open Sans",
+        "stroke": "black",
+        "strokeWidth": 1
+      },
       "encoding": {
-        "text": { "field": "properties.sa2_name21"},
+        "text": {
+          "field": "properties.sa2_name21"
+        },
+        "color": { "value": "white" },
         "longitude": { "field": "properties.long" },
         "latitude": { "field": "properties.lat" },
         "size": {
@@ -101,18 +166,11 @@
             "value": 16
           },
           "value": 20
-        },
-        "color": { 
-          "condition": {
-            "test": "luminance(scale('color', datum.selected_value)) < 0.3",
-            "value": "white"
-          },
-          "value": "black"
         }
       },
       "transform": [
         {
-          "filter": "datum.properties.sa2_name21 == 'Melbourne CBD - East' || datum.properties.sa2_name21 == 'Sunbury' || datum.properties.sa2_name21 == 'Werribee - West' || datum.properties.sa2_name21 == 'Epping - East'"
+          "filter": "datum.properties.sa2_name21 == 'Melbourne CBD - East'"
         }
       ]
     }

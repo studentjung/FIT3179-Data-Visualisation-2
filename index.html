@@ -9,49 +9,89 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css" integrity="sha384-X38yfunGUhNzHpBaEBsWLO+A0HDYOQi8ufWDkZ0k9e0eXz/tH3II7uKZ9msv++Ls" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/grids-responsive-min.css" />
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Iceberg&family=Open+Sans:ital,wght@0,800;1,800&display=swap" rel="stylesheet">
+
     <script src="https://cdn.jsdelivr.net/npm/vega@6.1.2"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-lite@6.3.1"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-embed@7.0.2"></script>
 
     <link rel="stylesheet" type="text/css" href="css/styles.css" media="all">
 
-    <!-- include fonts from https://fonts.google.com/ -->
-
-    <script src="./js/vega_lite_vis.js"></script>
-
     <title>Ground and Growth</title>
 </head>
 
 <body>
     <div class="page">
-        <h1 id="title">Ground and Growth</h1>
-        <h4 id="subtitle">Land Use and Population Patterns in Melbourne's Expanding Future</h4>
+        <div id="top-row">
+            <h1 id="title" class="pure-u-1">Ground and Growth</h1>
+            <h4 id="subtitle" class="pure-u-1">Land Use vs Population Patterns in North & West <b>Melbourne's</b> Expanding Future</h4>
+        </div>
     
-        <div class="pure-g">
-            <div id="dot">
+        <div class="pure-g row">
+            <div class="pure-u-1-2">
+                <h2>Future Land Use</h2>
+                <p class="top-p"><b>Melbourne</b> continues to experience steady population growth, with its suburbs expanding to accommodate increasing housing demand and evolving community needs. Understanding how <span class="landuse-text">land use</span> is planned, and where growth is occurring, offers valuable insight into the city's <b>development priorities, spatial distribution, and long-term sustainability</b>. This visualisation explores the <b>relationship between urban planning and population change</b> across Melbourne's suburbs.</p>
+                <p>The <b>choropleth map</b> illustrates the <em>percentage of land area</em> in each suburb near the <b>Melbourne CBD</b> that is allocated to different future <span class="landuse-text">land uses</span>. The <b>stacked bar chart</b> complements this by showing the <em>absolute area</em> (in km²) of planned land for each <span class="landuse-text">land use</span> category, allowing clear comparison of how <span class="resid-text">residential</span>, <span class="infra-text">infrastructure</span>, <span class="indus-text">industrial</span>, <span class="commu-text">community</span>, and <span class="open-text">open space</span> allocations differ across suburbs. Both charts include interactive options to select land use types or reorder suburbs by total area, enabling focused exploration of planning trends.</p>
+                <p><b>Tarneit</b> exhibits one of the highest proportions of planned development, with nearly all of its area already allocated to future land uses. The <b>Rockbank - Mount Cottrell</b> region contains the <b>largest absolute planned land area (≈ 40.56 km²)</b>, highlighting its role as a major growth corridor in Melbourne's west. In contrast, <b>Wallan</b> shows no planned <span class="indus-text">industrial</span> land use, suggesting a more <span class="resid-text">residential</span> or mixed-use development strategy.</p>
+            </div>
+            <div id="map" class="pure-u-1-2 viz">
+            </div>
+            <div id="bar" class="pure-u-1 viz">
             </div>
         </div>
 
-        <div class="pure-g">
-            <div id="tree">
+        <div class="pure-g row">
+            <h2 class="pure-u-1-1">Population</h2>
+            <div class="pure-u-1-2">
+                <div id="tree" class="viz">
+                </div>
+            </div>
+            <div class="pure-u-1-2">
+                <p class="top-p"><b>Melbourne's</b> suburbs continue to evolve alongside the city's expansion, with population growth shaping where future development occurs. This <b>treemap visualisation</b> provides an overview of suburban populations in <b>2024</b>, focusing on areas identified for planned land use. Each rectangle represents a suburb, grouped by its broader <em>SA3 region</em>, with area size proportional to total population — larger blocks indicate more residents.</p>
+                <p>The <span id="wdynham-text">Wyndham</span> region stands out with the <b>highest population</b> among the emerging development corridors, reflecting its rapid transformation and strong residential growth. Similarly, the <span class="tull-text">Mickleham - Yuroke</span> area within <span class="tull-text">Tullamarine - Broadmeadows</span> records the <b>largest overall population</b> among established regions, signalling a balance between mature infrastructure and continuing expansion.</p>
+                <p>Conversely, <span id="sunbury-text">Sunbury</span> maintains the <b>smallest population footprint</b> within these growth areas, highlighting its semi-rural character and limited current development. Within the <span class="melb-text">Melbourne City region</span>, the <span class="melb-text">Flemington Racecourse</span> area shows the <b>lowest population density</b>, largely due to land reserved for non-residential use.</p>
+                <p>Together, these population patterns reveal how <b>urban density and development priorities</b> vary across Melbourne's suburban landscape — offering insight into where the city's next phase of growth is most likely to occur.</p>
             </div>
         </div>
 
-        <div class="pure-g">
-            <div id="bar">
+        <div class="pure-g row viz">
+            <h2>Land Use vs Population</h2>
+            <div id="bubble" class="pure-u-1-1">
+            </div>
+            <div class="pure-u-1-2">
+                <p class="top-p">The relationship between <b>population change and future land use</b> offers insight into how Melbourne's urban form continues to evolve. These <b>scatterplot visualisations</b> compare total planned land use area against key drivers of population growth — <em>natural increase</em>, <em>net internal migration</em>, and <em>net overseas migration</em> — to highlight where planning activity is most responsive to demographic pressure.</p>
+                <p>Trends for <b>natural increase</b> and <b>net internal migration</b> show a clear positive correlation with total planned land use across the suburbs, while <b>overseas migration</b> displays a slight negative correlation, with a few notable outliers such as <b>Rockbank - Mount Cottrell</b> and <b>Wallan</b>. The majority of Melbourne's recent population growth has been driven by internal migration, particularly towards growth corridors in the west and north where large-scale housing developments are underway.</p>
+                <p>Overall <b>population size</b> varies widely between suburbs but shows limited correlation with planned land use area. However, <span class="landuse-text">population density</span> tends to decline as the total planned land use area increases, implying that urban expansion is occurring through <em>low-density greenfield development</em> rather than higher-density infill. This reflects Melbourne's continued outward growth pattern, consistent with planning priorities in areas like <b>Wyndham</b> and <b>Melton - Bacchus Marsh</b>.</p>
+            </div>
+            <div id="scatter" class="pure-u-1-2">
             </div>
         </div>
 
-        <div class="pure-g">
-            <div id="map">
+        <div class="pure-g final">
+            <div class="pure-u-1-2">
+                <h2>Summary</h2>
+                <p><b>Melbourne</b> continues to grow steadily, with major <b>land use planning</b> focused on outer suburbs like <b>Tarneit</b> and <b>Rockbank - Mount Cottrell</b>, key hubs of low-density expansion. The <b>Wyndham</b> region leads in population growth, driven mainly by <b>internal migration</b>. Overall, population density declines as planned land use increases, reflecting Melbourne's outward, <em>greenfield-focused</em> development pattern.</p>
             </div>
-        </div>
-
-        <div class="pure-g">
-            <div id="bubble">
+            <div class="pure-u-1-4">
+                <p class="meta-text top-p"><b>Author:</b> Sheng Jie Chen</p>
+                <p class="meta-text"><b>Date:</b> 19th Oct 2025</p>
+                <p class="meta-text"><b>Sources:</b></p>
+                <ul>
+                    <li><a href="https://discover.data.vic.gov.au/dataset/fus-land-use">Future Land Use</a></li>
+                    <li><a href="https://www.abs.gov.au/statistics/standards/australian-statistical-geography-standard-asgs-edition-3/jul2021-jun2026/access-and-downloads/digital-boundary-files">Melbourne Boundary</a></li>
+                    <li><a href="https://www.abs.gov.au/statistics/people/population/regional-population/latest-release#data-downloads">Population</a></li>
+                </ul>
+            </div>
+            <div class="pure-u-1-4">
+                <h5>"Generative AI (ChatGPT, OpenAI) was used solely to assist in drafting and refining the textual elements of the visualisation, such as labels, titles, and annotations. All design decisions, data selection, analysis, and Vega-Lite coding were completed by the author."</h5>
             </div>
         </div>
     </div>
+
+    <script src="./js/vega_lite_vis.js"></script>
 </body>
 
 </html>

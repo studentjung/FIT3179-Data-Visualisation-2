@@ -17,13 +17,20 @@
       "titleFontSize": 14,
       "labelFontSize": 13
     },
+    "legend": {
+      "labelColor": "white",
+      "titleColor": "white",
+      "labelFont": "Open Sans",
+      "titleFont": "Open Sans",
+      "titleFontSize": 14,
+      "labelFontSize": 13
+    },
     "title": {
       "color": "white",
       "font": "Open Sans",
       "fontSize": 15
     }
   },
-  "title": "Overall increase in Population (2024) vs Land Use",
   "transform": [
     {
       "fold": [
@@ -47,47 +54,71 @@
           "2023",
           "2024",
           "2023-24",
+          "natural_increase",
+          "net_internal_migration",
+          "net_overseas_migration",
           "pop_dense_2024"
         ]
       }
     },
     {
-      "filter": "datum.area != null && datum.area > 0.05"
+      "fold": [
+        "natural_increase",
+        "net_internal_migration",
+        "net_overseas_migration"
+      ],
+      "as": ["migration", "value"]
+    },
+    {
+      "calculate": "datum.migration == 'natural_increase' ? 'Natural Increase' : datum.migration == 'net_internal_migration' ? 'Net Internal Migration' : 'Net Overseas Migration'",
+      "as": "migration_label"
+    },
+    {
+      "filter": "datum.area != null && datum.area > 0"
     },
     {
       "filter": "datum['2023-24'] != null && datum['2024'] > 0 && datum['2023-24'] > 0"
     },
     {
+      "filter": "datum['natural_increase'] != null && datum['natural_increase'] > 0"
+    },
+    {
+      "filter": "datum['net_internal_migration'] != null && datum['net_internal_migration'] > 0"
+    },
+    {
+      "filter": "datum['net_overseas_migration'] != null && datum['net_overseas_migration'] > 0"
+    },
+    {
       "filter": "datum['pop_dense_2024'] != null && datum['pop_dense_2024'] > 0"
     }
   ],
-  "autosize": {
-    "type": "fit"
-  },
-  "width": "container",
-  "height": 500,
+  "width": 300,
+  "height": 300,
   "mark": { "type": "circle", "opacity": 0.7, "stroke": "black" },
   "encoding": {
+    "facet": {
+      "field": "migration_label",
+      "header": {
+        "title": "Migration (2024) vs Planned Land Use",
+        "labelFont": "Open Sans",
+        "labelColor": "white",
+        "titleFont": "Open Sans",
+        "titleColor": "white",
+        "titleFontSize": 13,
+        "labelFontSize": 12
+      }
+    },
     "y": {
       "aggregate": "sum",
       "field": "area",
       "type": "quantitative",
-      "title": "Total Land Use (km²)",
-      "scale": {
-        "type": "log"
-      },
-      "axis": {
-        "values": [0.1, 1, 10, 100, 1000]
-      }
+      "title": "Total Land Use (km²)"
     },
     "x": {
-      "field": "2023-24",
+      "field": "value",
       "type": "quantitative",
-      "scale": {
-        "type": "log"
-      },
       "axis": {
-        "values": [0.1, 1, 10, 100, 1000]
+        "title": ""
       }
     },
     "size": {
@@ -97,7 +128,10 @@
         "type": "log",
         "range": [1, 1500]
       },
-      "legend": null
+      "legend": {
+        "title": "Population",
+        "orient": "bottom"
+      }
     },
     "color": {
       "field": "pop_dense_2024",
@@ -106,7 +140,10 @@
         "type": "log",
         "scheme": "browns"
       },
-      "legend": null
+      "legend": {
+        "title": "Pop Density (people/km²)",
+        "orient": "bottom"
+      }
     },
     "tooltip": [
       {
@@ -125,7 +162,22 @@
       {
         "field": "2023-24",
         "type": "quantitative",
-        "title": "Population Growth"
+        "title": "Population Growth (%)"
+      },
+      {
+        "field": "natural_increase",
+        "type": "quantitative",
+        "title": "Natural Increase"
+      },
+      {
+        "field": "net_internal_migration",
+        "type": "quantitative",
+        "title": "Net Internal Migration"
+      },
+      {
+        "field": "net_overseas_migration",
+        "type": "quantitative",
+        "title": "Net Overseas Migration"
       },
       {
         "field": "pop_dense_2024",
