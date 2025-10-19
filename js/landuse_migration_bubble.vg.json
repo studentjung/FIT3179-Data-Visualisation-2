@@ -28,7 +28,7 @@
     "title": {
       "color": "white",
       "font": "Open Sans",
-      "fontSize": 16
+      "fontSize": 18
     }
   },
   "transform": [
@@ -104,7 +104,7 @@
         "labelColor": "white",
         "titleFont": "Open Sans",
         "titleColor": "white",
-        "titleFontSize": 16,
+        "titleFontSize": 18,
         "labelFontSize": 14,
         "labelFontWeight": "bold"
       }
