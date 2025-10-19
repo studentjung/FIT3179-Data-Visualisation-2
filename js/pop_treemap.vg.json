@@ -13,17 +13,22 @@
       "labelColor": "white",
       "titleColor": "white",
       "labelFont": "Open Sans",
-      "titleFont": "Open Sans"
+      "titleFont": "Open Sans",
+      "titleFontSize": 14,
+      "labelFontSize": 13
     },
     "legend": {
       "labelColor": "white",
       "titleColor": "white",
       "labelFont": "Open Sans",
-      "titleFont": "Open Sans"
+      "titleFont": "Open Sans",
+      "titleFontSize": 14,
+      "labelFontSize": 13
     },
     "title": {
       "color": "white",
-      "font": "Open Sans"
+      "font": "Open Sans",
+      "fontSize": 16
     }
   },
   "data": [
@@ -64,9 +69,9 @@
         {
           "type": "aggregate",
           "groupby": ["sa3_name"],
-          "fields": ["x0","x1","y0","y1"],
-          "ops": ["min","max","min","max"],
-          "as": ["x0_min","x1_max","y0_min","y1_max"]
+          "fields": ["x0", "x1", "y0", "y1"],
+          "ops": ["min", "max", "min", "max"],
+          "as": ["x0_min", "x1_max", "y0_min", "y1_max"]
         }
       ]
     }
@@ -104,14 +109,16 @@
       "encode": {
         "enter": {
           "x": { "signal": "(datum.x0_min + datum.x1_max)/2" },
-          "y": { "signal": "datum.sa3_name == 'Monash' ? (datum.y0_min + datum.y1_max)/2 - 30 : (datum.y0_min + datum.y1_max)/2" },
+          "y": {
+            "signal": "datum.sa3_name == 'Monash' ? (datum.y0_min + datum.y1_max)/2 - 30 : (datum.y0_min + datum.y1_max)/2"
+          },
           "text": { "field": "sa3_name" },
           "align": { "value": "center" },
           "baseline": { "value": "middle" },
           "fill": { "value": "white" },
-          "fontSize": { "value": 18 },
+          "fontSize": { "value": 15 },
           "font": { "value": "Open Sans" },
-          "fontWeight": { "value": "bolder"}
+          "fontWeight": { "value": "bolder" }
         }
       }
     }

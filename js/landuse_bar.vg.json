@@ -33,7 +33,7 @@
     "title": {
       "color": "white",
       "font": "Open Sans",
-      "fontSize": 15
+      "fontSize": 16
     }
   },
   "params": [
@@ -202,7 +202,7 @@
       "encoding": {
         "text": { "value": "Rockbank - Mount Cottrell has 40.56 km² of" },
         "x": { "value": 440 },
-        "y": { "value": 90 }
+        "y": { "value": 85 }
       }
     },
     {
@@ -217,7 +217,7 @@
       "encoding": {
         "text": { "value": "planned out space making it the largest." },
         "x": { "value": 445 },
-        "y": { "value": 105 }
+        "y": { "value": 100 }
       }
     }
   ]

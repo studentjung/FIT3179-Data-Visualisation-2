@@ -20,7 +20,7 @@
     "title": {
       "color": "white",
       "font": "Open Sans",
-      "fontSize": 15
+      "fontSize": 16
     }
   },
   "title": "Overall increase in Population (2024) vs Land Use",
@@ -77,6 +77,7 @@
     },
     "x": {
       "field": "2023-24",
+      "title": "Population Difference",
       "type": "quantitative",
       "scale": {
         "type": "log"

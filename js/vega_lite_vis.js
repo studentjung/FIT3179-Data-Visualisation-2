@@ -22,7 +22,8 @@ async function renderBubble() {
     
     const dyna_bubble_map = {
         ...bubble_spec,
-        width: bubble_width / 3
+        width: bubble_width / 3,
+        height: bubble_width / 3
     };
     
     vegaEmbed("#bubble", dyna_bubble_map, { actions: false }).then(function(result) {
@@ -41,7 +42,8 @@ async function renderTreeMap() {
     
     const dyna_tree_map = {
         ...tree_spec,
-        width: tree_width
+        width: tree_width,
+        height: tree_width
     };
     
     vegaEmbed("#tree", dyna_tree_map, { actions: false }).then(function(result) {

@@ -28,7 +28,7 @@
     "title": {
       "color": "white",
       "font": "Open Sans",
-      "fontSize": 15
+      "fontSize": 16
     }
   },
   "transform": [
@@ -104,8 +104,9 @@
         "labelColor": "white",
         "titleFont": "Open Sans",
         "titleColor": "white",
-        "titleFontSize": 13,
-        "labelFontSize": 12
+        "titleFontSize": 16,
+        "labelFontSize": 14,
+        "labelFontWeight": "bold"
       }
     },
     "y": {
